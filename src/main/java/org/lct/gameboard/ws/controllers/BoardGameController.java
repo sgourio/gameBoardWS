@@ -6,14 +6,16 @@
 
 package org.lct.gameboard.ws.controllers;
 
+import org.lct.dictionary.beans.Dictionary;
+import org.lct.dictionary.services.DictionaryService;
 import org.lct.gameboard.ws.beans.model.BoardGameTemplate;
+import org.lct.gameboard.ws.beans.model.Tile;
 import org.lct.gameboard.ws.beans.view.BoardGame;
 import org.lct.gameboard.ws.beans.view.BoardGameQueryBean;
 import org.lct.gameboard.ws.beans.view.DroppedWord;
 import org.lct.gameboard.ws.services.BoardService;
-import org.lct.dictionary.beans.Dictionary;
-import org.lct.dictionary.services.DictionaryService;
 import org.lct.gameboard.ws.services.impl.BoardGameTemplateEnum;
+import org.lct.gameboard.ws.services.impl.DeckTemplateEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,6 +46,18 @@ public class BoardGameController {
         BoardGameTemplate boardGameTemplate = new BoardGameTemplate(BoardGameTemplateEnum.classic.getSquares());
         BoardGame boardGame = new BoardGame(boardGameTemplate);
         return new ResponseEntity<BoardGame>(boardGame, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/deck/init", method=RequestMethod.GET)
+    @ResponseStatus(value=HttpStatus.OK)
+    public @ResponseBody ResponseEntity<List<Tile>> deck(@PathVariable("lang") String lang){
+        List<Tile> result = null;
+        if( "en".equals(lang) ){
+            result = DeckTemplateEnum.english.getTileList();
+        }else {
+             result = DeckTemplateEnum.french.getTileList();
+        }
+        return new ResponseEntity<List<Tile>>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value="/bestword", method=RequestMethod.POST)

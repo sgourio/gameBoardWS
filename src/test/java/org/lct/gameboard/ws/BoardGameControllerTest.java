@@ -52,6 +52,14 @@ public class BoardGameControllerTest {
     }
 
     @Test
+    public void initalDeck() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/board/fr/deck/init").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+        ;
+    }
+
+    @Test
     public void empty() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/board/fr/empty").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())

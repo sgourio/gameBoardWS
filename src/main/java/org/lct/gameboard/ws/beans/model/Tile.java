@@ -9,12 +9,14 @@
  */
 package org.lct.gameboard.ws.beans.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Sylvain Gourio
  *
  */
+@JsonFormat(shape= JsonFormat.Shape.OBJECT)
 public enum Tile {
 	A("A", 1, TileType.vowel),
 	B("B", 3, TileType.consonant),
