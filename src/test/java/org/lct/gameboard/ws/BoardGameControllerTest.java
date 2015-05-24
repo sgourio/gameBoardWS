@@ -11,11 +11,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.lct.gameboard.ws.Application;
 import org.lct.gameboard.ws.beans.model.BoardGameTemplate;
 import org.lct.gameboard.ws.beans.model.Tile;
 import org.lct.gameboard.ws.beans.view.BoardGame;
 import org.lct.gameboard.ws.beans.view.BoardGameQueryBean;
-import org.lct.gameboard.ws.beans.view.Square;
 import org.lct.gameboard.ws.services.impl.BoardGameTemplateEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -24,6 +24,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -54,16 +56,16 @@ public class BoardGameControllerTest {
     @Test
     public void initalDeck() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/board/fr/deck/init").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
         ;
     }
 
     @Test
     public void empty() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/board/fr/empty").accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
         ;
     }
 
@@ -73,6 +75,7 @@ public class BoardGameControllerTest {
         BoardGame boardGame = new BoardGame(boardGameTemplate);
 
         List<Tile> tileList = new ArrayList<Tile>();
+
         tileList.add(Tile.A);
         tileList.add(Tile.B);
         tileList.add(Tile.R);
@@ -81,14 +84,17 @@ public class BoardGameControllerTest {
         tileList.add(Tile.E);
         tileList.add(Tile.N);
 
+
         BoardGameQueryBean boardGameQueryBean = new BoardGameQueryBean(tileList, boardGame);
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(boardGameQueryBean);
 
+        //BoardGameQueryBean b = mapper.readValue(json, BoardGameQueryBean.class);
+
         mvc.perform(MockMvcRequestBuilders.post("/board/fr/bestword").contentType(MediaType.APPLICATION_JSON).content(json).accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
 //                .andExpect(content().string(equalTo("true")))
         ;
     }

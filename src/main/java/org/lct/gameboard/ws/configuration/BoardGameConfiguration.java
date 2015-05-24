@@ -6,8 +6,8 @@
 
 package org.lct.gameboard.ws.configuration;
 
-import org.lct.gameboard.ws.services.BoardService;
 import org.lct.gameboard.ws.services.impl.BoardServiceImpl;
+import org.lct.gameboard.ws.services.BoardService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

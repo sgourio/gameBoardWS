@@ -31,4 +31,13 @@ public class BoardGameQueryBean {
     public BoardGame getBoardGame() {
         return boardGame;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer s = new StringBuffer();
+        for(Tile tile :tileList){
+            s.append(tile.getValue());
+        }
+        return s.toString();
+    }
 }

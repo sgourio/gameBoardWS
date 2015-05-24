@@ -1,7 +1,9 @@
+group = "org.lct"
+version = "0.1.0"
+
 buildscript {
     repositories {
         mavenCentral()
-
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
@@ -12,33 +14,30 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'maven'
 
 jar {
     baseName = 'gameboard-ws'
-    version =  '0.1.0'
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
-/*    maven {
-        url "https://jitpack.io"
-    }*/
 }
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-web:1.2.3.RELEASE")
     compile("org.apache.commons:commons-lang3:3.1")
     compile("org.lct:dictionary:1.00.04")
-    testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("junit:junit")
+    testCompile("org.springframework.boot:spring-boot-starter-test:1.2.3.RELEASE")
+    testCompile("junit:junit:4.12")
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-mainClassName = "lct.ws.Application"
+mainClassName = "org.lct.gameboard.ws.Application"

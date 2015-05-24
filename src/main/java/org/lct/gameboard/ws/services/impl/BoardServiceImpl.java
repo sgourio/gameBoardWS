@@ -8,9 +8,9 @@ package org.lct.gameboard.ws.services.impl;
 
 
 import org.lct.gameboard.ws.beans.model.Tile;
+import org.lct.gameboard.ws.beans.view.DroppedWord;
 import org.lct.gameboard.ws.beans.view.BoardGame;
 import org.lct.gameboard.ws.beans.view.DroppedTile;
-import org.lct.gameboard.ws.beans.view.DroppedWord;
 import org.lct.gameboard.ws.beans.view.Square;
 import org.lct.gameboard.ws.services.BoardService;
 import org.lct.dictionary.beans.*;

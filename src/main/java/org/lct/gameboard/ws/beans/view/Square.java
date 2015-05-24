@@ -17,13 +17,11 @@ public class Square {
     private final SquareType squareType;
     private final DroppedTile droppedTile;
     private final boolean justDropped;
-    private final boolean empty;
 
     public Square(@JsonProperty("squareType") SquareType squareType, @JsonProperty("droppedTile") DroppedTile droppedTile, @JsonProperty("justDropped") boolean justDropped) {
         this.squareType = squareType;
         this.droppedTile = droppedTile;
         this.justDropped = justDropped;
-        this.empty = droppedTile == null;
     }
 
     public SquareType getSquareType() {
@@ -39,6 +37,6 @@ public class Square {
     }
 
     public boolean isEmpty() {
-        return empty;
+        return droppedTile == null;
     }
 }
