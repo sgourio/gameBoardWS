@@ -15,7 +15,7 @@ public class BoardGameTemplate {
 
     private final SquareType[][] squares;
 
-    public BoardGameTemplate(@JsonProperty("squaresType") SquareType[][] squares) {
+    public BoardGameTemplate(@JsonProperty("squares") SquareType[][] squares) {
         this.squares = squares;
     }
 

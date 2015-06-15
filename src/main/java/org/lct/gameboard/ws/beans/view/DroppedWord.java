@@ -6,6 +6,7 @@
 
 package org.lct.gameboard.ws.beans.view;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class DroppedWord {
 
 
 
-    public DroppedWord(List<Square> squareList, int points, boolean horizontal, int row, int column) {
+    public DroppedWord(@JsonProperty("squareList") List<Square> squareList, @JsonProperty("points") int points, @JsonProperty("horizontal") boolean horizontal, @JsonProperty("row") int row, @JsonProperty("column") int column) {
         this.squareList = Collections.unmodifiableList(new ArrayList<Square>(squareList));
         this.points = points;
         String val = "";

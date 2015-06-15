@@ -121,4 +121,26 @@ public class Tile {
 	public String toString() {
 		return value + "("+point+")";
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tile tile = (Tile) o;
+
+        if (point != tile.point) return false;
+        if (tileType != tile.tileType) return false;
+        if (!value.equals(tile.value)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value.hashCode();
+        result = 31 * result + point;
+        result = 31 * result + tileType.hashCode();
+        return result;
+    }
 }

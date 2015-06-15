@@ -24,6 +24,6 @@ public enum SquareType {
 	tripleLetter,
 	doubleWord,
 	tripleWord;
-	
+
 
 }
