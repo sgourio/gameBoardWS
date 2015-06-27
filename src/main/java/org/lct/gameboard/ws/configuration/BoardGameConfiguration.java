@@ -8,6 +8,7 @@ package org.lct.gameboard.ws.configuration;
 
 import org.lct.gameboard.ws.services.impl.BoardServiceImpl;
 import org.lct.gameboard.ws.services.BoardService;
+import org.lct.gameboard.ws.services.impl.BoardServiceParalellizeImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,6 +20,6 @@ public class BoardGameConfiguration {
 
     @Bean
     BoardService boardService(){
-        return new BoardServiceImpl();
+        return new BoardServiceParalellizeImpl();
     }
 }
