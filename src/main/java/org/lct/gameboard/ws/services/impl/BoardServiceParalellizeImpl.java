@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Board game service
@@ -35,14 +36,54 @@ public class BoardServiceParalellizeImpl implements BoardService {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardServiceParalellizeImpl.class);
 
+    class Paralelle extends BoardServiceParalellizeImpl implements Callable<Set<DroppedWord>> {
+        DictionaryService dictionaryService;
+        Dictionary dictionary;
+        BoardGame boardGame;
+        List<DroppedTile> draw;
+
+        public Paralelle(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<DroppedTile> draw) {
+            this.dictionaryService = dictionaryService;
+            this.dictionary = dictionary;
+            this.boardGame = boardGame;
+            this.draw = draw;
+        }
+
+        @Override
+        public Set<DroppedWord> call() throws Exception {
+            Set<DroppedWord> horizontalWordList = findHorizontalBestWord(dictionaryService, dictionary, boardGame, draw);
+            Set<DroppedWord> verticalWordList = findVerticalBestWord(dictionaryService, dictionary, boardGame, draw);
+            return chooseBestSet(horizontalWordList, verticalWordList);
+        }
+    }
+
     @Override
     public Set<DroppedWord> findBestWord(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<Tile> tileList){
         //logBoardGameWithSquare(boardGame);
-        Set<DroppedWord> bestWordList = null;
         List<List<DroppedTile>> drawList = getPossibleDraw(tileList);
-        Set<DroppedWord> horizontalWordList = findHorizontalBestWord(dictionaryService, dictionary, boardGame, drawList);
-        Set<DroppedWord> verticalWordList = findVerticalBestWord(dictionaryService, dictionary, boardGame, drawList);
-        bestWordList = chooseBestSet(horizontalWordList, verticalWordList);
+        Set<DroppedWord> bestWordList = new HashSet<>();
+        List<Future<Set<DroppedWord>>> results = new ArrayList<>();
+        ExecutorService executor = Executors.newFixedThreadPool(drawList.size());
+        for( List<DroppedTile> draw : drawList) {
+            String s = "";
+            for( DroppedTile droppedTile : draw){
+                s+=droppedTile.getValue();
+            }
+            logger.info("Draw: " + s);
+
+
+            Callable<Set<DroppedWord>> worker = new Paralelle(dictionaryService, dictionary, boardGame, draw);
+            Future<Set<DroppedWord>> submit = executor.submit(worker);
+            results.add(submit);
+        }
+        for (Future<Set<DroppedWord>> future : results) {
+            try {
+                bestWordList = chooseBestSet(bestWordList, future.get());
+            } catch (Exception e) {
+                logger.error("",e);
+            }
+        }
+        executor.shutdown();
         return bestWordList;
     }
 
@@ -109,13 +150,13 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * If board is empty, no word is allowed
      * @param dictionaryService
      * @param boardGame
-     * @param drawList
+     * @param draw
      * @return
      */
-    private Set<DroppedWord> findVerticalBestWord(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<List<DroppedTile>> drawList) {
+    private Set<DroppedWord> findVerticalBestWord(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<DroppedTile> draw) {
         Set<DroppedWord> result = new HashSet<DroppedWord>();
         if( !boardGame.getMiddleSquare().isEmpty() ) { // first turn is horizontal
-            Set<DroppedWord> wordList = findHorizontalBestWord(dictionaryService, dictionary, boardGame.transpose(), drawList);
+            Set<DroppedWord> wordList = findHorizontalBestWord(dictionaryService, dictionary, boardGame.transpose(), draw);
             for (DroppedWord word : wordList) {
                 DroppedWord w = word.transpose();
                 result.add(w);
@@ -128,19 +169,17 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * Find best horizontal words for this board game
      * @param dictionaryService
      * @param boardGame
-     * @param drawList
+     * @param draw
      * @return
      */
-    private Set<DroppedWord> findHorizontalBestWord(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<List<DroppedTile>> drawList) {
+    private Set<DroppedWord> findHorizontalBestWord(DictionaryService dictionaryService, Dictionary dictionary, BoardGame boardGame, List<DroppedTile> draw) {
         Set<DroppedWord> wordList = new HashSet<DroppedWord>();
         for( int i = 0; i < boardGame.getSquares().length ; i++){
             for( int j = 0; j < boardGame.getSquares()[0].length; j++){
                 if( isAnchorHorizontal(i, j, boardGame)){
                     int emptyLeftCount = getLeftEmtyCount(i, j, boardGame);
-                    for( List<DroppedTile> tileList : drawList) {
-                        Set<DroppedWord> temp = findWordAtSquare(dictionaryService, dictionary, i, j, emptyLeftCount, tileList, boardGame, 0);
-                        wordList = chooseBestSet(wordList, temp);
-                    }
+                    Set<DroppedWord> temp = findWordAtSquare(dictionaryService, dictionary, i, j, emptyLeftCount, draw, boardGame, 0);
+                    wordList = chooseBestSet(wordList, temp);
                 }
             }
         }
