@@ -194,11 +194,11 @@ public class BoardServiceParalellizeImpl implements BoardService {
      */
     private boolean isAnchorHorizontal(int row, int column, BoardGame boardGame){
         Square[][] squares = boardGame.getSquares();
-        if( boardGame.getMiddleSquare().isEmpty() && row == (squares.length / 2) && column == (squares[0].length / 2)){
+        Square square = squares[row][column];
+        if( square.isEmpty() && row == (squares.length / 2) && column == (squares[0].length / 2)){ // test middle square
             return true;
         }
 
-        Square square = squares[row][column];
         if( !square.isEmpty()){
             if( column == 0 ){
                 return true;
