@@ -69,8 +69,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
             for( DroppedTile droppedTile : draw){
                 s+=droppedTile.getValue();
             }
-            logger.info("Draw: " + s);
-
+            //logger.info("Draw: " + s);
 
             Callable<Set<DroppedWord>> worker = new Paralelle(dictionaryService, dictionary, boardGame, draw);
             Future<Set<DroppedWord>> submit = executor.submit(worker);
