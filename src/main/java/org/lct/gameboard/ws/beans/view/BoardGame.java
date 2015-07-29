@@ -15,13 +15,9 @@ import org.lct.gameboard.ws.beans.model.BoardGameTemplate;
 public final class BoardGame {
 
     private final Square[][] squares;
-    private final Square middleSquare;
 
     public BoardGame(@JsonProperty("squares") Square[][] squares) {
-
         this.squares = squares;
-        this.middleSquare = squares[squares.length / 2][squares[0].length / 2];
-
     }
 
     public BoardGame(BoardGameTemplate template){
@@ -32,7 +28,6 @@ public final class BoardGame {
             }
         }
         this.squares = squareTab;
-        this.middleSquare = squareTab[squareTab.length / 2][squareTab[0].length / 2];
     }
 
 
@@ -115,6 +110,6 @@ public final class BoardGame {
     }
 
     public Square getMiddleSquare() {
-        return middleSquare;
+        return this.squares[squares.length / 2][squares[0].length / 2];
     }
 }
