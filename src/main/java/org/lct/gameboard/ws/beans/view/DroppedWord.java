@@ -48,7 +48,7 @@ public class DroppedWord {
         this.value = val;
         this.containWilcard = wildcard;
         this.horizontal = horizontal;
-        this.reference =  horizontal ? String.valueOf("ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(row)) + StringUtils.leftPad(String.valueOf(column + 1), 2)  : StringUtils.leftPad(String.valueOf(column + 1), 2) + String.valueOf("ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(row)) ;
+        this.reference =  StringUtils.rightPad( horizontal ? String.valueOf("ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(row)) + String.valueOf(column + 1)  : String.valueOf(column + 1) + String.valueOf("ABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(row)) , 3 , ' ' );
         this.serialized = valSerialized;
         this.row = row;
         this.column = column;
