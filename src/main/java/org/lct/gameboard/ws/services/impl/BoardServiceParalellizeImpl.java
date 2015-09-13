@@ -176,7 +176,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
         for( int i = 0; i < boardGame.getSquares().length ; i++){
             for( int j = 0; j < boardGame.getSquares()[0].length; j++){
                 if( isAnchorHorizontal(i, j, boardGame)){
-                    int emptyLeftCount = getLeftEmtyCount(i, j, boardGame);
+                    int emptyLeftCount = getLeftEmptyCount(i, j, boardGame);
                     Set<DroppedWord> temp = findWordAtSquare(dictionaryService, dictionary, i, j, emptyLeftCount, draw, boardGame, 0);
                     wordList = chooseBestSet(wordList, temp);
                 }
@@ -250,7 +250,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * @param boardGame
      * @return
      */
-    private int getLeftEmtyCount(int line, int column, BoardGame boardGame){
+    private int getLeftEmptyCount(int line, int column, BoardGame boardGame){
         if( column == 0){
             return 0;
         }
@@ -479,7 +479,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * @param column
      * @return
      */
-    private DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column){
+    public DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column){
         return getHorizontalWord(boardGame.transpose(), column, line, 0).transpose();
     }
 
@@ -490,7 +490,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * @param column
      * @return
      */
-    private DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd){
+    public DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd){
         List<Square> currentSquareList = new ArrayList<Square>();
 
         int currentColumn = column;
@@ -523,7 +523,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
      * @param currentSquareList
      * @return
      */
-    private boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList){
+    public boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList){
         if( currentSquareList.size() == 1){
             return true;
         }

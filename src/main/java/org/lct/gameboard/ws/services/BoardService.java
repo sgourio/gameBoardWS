@@ -12,6 +12,7 @@ import org.lct.gameboard.ws.beans.view.BoardGame;
 import org.lct.gameboard.ws.beans.view.DroppedWord;
 import org.lct.dictionary.beans.Dictionary;
 import org.lct.dictionary.services.DictionaryService;
+import org.lct.gameboard.ws.beans.view.Square;
 
 import java.util.List;
 import java.util.Set;
@@ -43,4 +44,10 @@ public interface BoardService {
      * @param boardGame
      */
     public void logBoardGame(BoardGame boardGame);
+
+    public DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column);
+
+    public DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd);
+
+    public boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList);
 }

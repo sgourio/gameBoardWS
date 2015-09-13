@@ -428,7 +428,7 @@ public class BoardServiceImpl implements BoardService {
      * @param column
      * @return
      */
-    private DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column){
+    public DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column){
         return getHorizontalWord(boardGame.transpose(), column, line, 0).transpose();
     }
 
@@ -439,7 +439,7 @@ public class BoardServiceImpl implements BoardService {
      * @param column
      * @return
      */
-    private DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd){
+    public DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd){
         List<Square> currentSquareList = new ArrayList<Square>();
 
         int currentColumn = column;
@@ -472,7 +472,7 @@ public class BoardServiceImpl implements BoardService {
      * @param currentSquareList
      * @return
      */
-    private boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList){
+    public boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList){
         if( currentSquareList.size() == 1){
             return true;
         }
