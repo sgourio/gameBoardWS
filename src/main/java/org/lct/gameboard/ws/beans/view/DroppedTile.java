@@ -31,4 +31,20 @@ public final class DroppedTile {
         return value;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DroppedTile that = (DroppedTile) o;
+
+        if (tile != null ? !tile.equals(that.tile) : that.tile != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return tile != null ? tile.hashCode() : 0;
+    }
 }
