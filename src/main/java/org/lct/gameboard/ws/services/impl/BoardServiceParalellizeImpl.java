@@ -121,14 +121,45 @@ public class BoardServiceParalellizeImpl implements BoardService {
         return result;
     }
 
+    private int getNbPotentionnalFreeSpaceAfter(BoardGame boardGame, int row, int column){
+        int nbSpaceAfterWord = 0;
+        for(int j = column ; j < 15 ; j++ ){
+            if( boardGame.getSquares()[row][j].isEmpty()
+                    && (j == 14 || boardGame.getSquares()[row][j+1].isEmpty())
+                    && (row == 0 || boardGame.getSquares()[row - 1][j].isEmpty())
+                    && (row == 14 || boardGame.getSquares()[row + 1][j].isEmpty())){
+                nbSpaceAfterWord++;
+            }else{
+                break;
+            }
+        }
+        return nbSpaceAfterWord;
+    }
+
     @Override
-    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord){
+    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord, DictionaryService dictionaryService, Dictionary dictionary){
         int score = droppedWord.getPoints() * 100000;
         if( !droppedWord.isContainWilcard() ){
             score += 10000;
         }
         int line = droppedWord.getRow();
         int column = droppedWord.getColumn();
+        int nbSpaceAfterWord = 0;
+        if( droppedWord.isHorizontal() ){
+            nbSpaceAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame, line, column);
+        }else{
+            nbSpaceAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame.transpose(), line, column);
+        }
+
+        if( nbSpaceAfterWord > 0 ) {
+            Set<String> possibleWords = dictionaryService.findSuffix(droppedWord.getValue(), dictionary);
+            for (String word : possibleWords) {
+                if (word.length() <= (droppedWord.getValue().length() + nbSpaceAfterWord)) {
+                    score += 1000;
+                }
+            }
+        }
+
         for( Square ignored : droppedWord.getSquareList()){
             if( isAnchorHorizontal(line, column, boardGame) ){
                 score += 100;
@@ -139,6 +170,7 @@ public class BoardServiceParalellizeImpl implements BoardService {
                 line++;
             }
         }
+
         score += boardGame.getSquares().length - droppedWord.getRow();
         score += boardGame.getSquares()[0].length - droppedWord.getColumn();
         return score;

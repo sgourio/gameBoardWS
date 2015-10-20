@@ -37,7 +37,7 @@ public interface BoardService {
      * @param droppedWord
      * @return
      */
-    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord);
+    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord, DictionaryService dictionaryService, Dictionary dictionary);
 
     /**
      * Put in logger the current board game

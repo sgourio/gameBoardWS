@@ -25,8 +25,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by sgourio on 12/04/15.
@@ -64,7 +63,7 @@ public class BoardGameController {
 
     @RequestMapping(value="/bestword", method=RequestMethod.POST)
     @ResponseStatus(value=HttpStatus.OK)
-    public @ResponseBody ResponseEntity<Set<DroppedWord>> findBestWord(@PathVariable("lang") String lang, @RequestBody BoardGameQueryBean boardGameQueryBean){
+    public @ResponseBody ResponseEntity<List<DroppedWord>> findBestWord(@PathVariable("lang") final String lang, @RequestBody final BoardGameQueryBean boardGameQueryBean){
         if( logger.isDebugEnabled() ) {
             logger.debug("Find best word " + boardGameQueryBean);
         }
@@ -74,7 +73,17 @@ public class BoardGameController {
             sb.append(droppedWord.toString() + " / ");
         }
         logger.info("Find best word " + boardGameQueryBean + " -> " + sb.toString());
-        return  new ResponseEntity<Set<DroppedWord>>(droppedWordSet, HttpStatus.OK);
+        List<DroppedWord> sortedDroppedWord = new ArrayList<>(droppedWordSet);
+        Collections.sort(sortedDroppedWord, new Comparator<DroppedWord>() {
+            @Override
+            public int compare(DroppedWord o1, DroppedWord o2) {
+                Integer o1Score = boardService.wordInternalScore(boardGameQueryBean.getBoardGame(), o1, dictionaryService, Dictionary.getByLang(lang));
+                Integer o2Score = boardService.wordInternalScore(boardGameQueryBean.getBoardGame(), o2, dictionaryService, Dictionary.getByLang(lang));
+                return o2Score.compareTo(o1Score);
+            }
+        });
+
+        return  new ResponseEntity<List<DroppedWord>>(sortedDroppedWord, HttpStatus.OK);
     }
 
     @ExceptionHandler(Exception.class)

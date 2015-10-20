@@ -40,7 +40,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord){
+    public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord, DictionaryService dictionaryService, Dictionary dictionary){
         int score = droppedWord.getPoints() * 100000;
         if( !droppedWord.isContainWilcard() ){
             score += 10000;
