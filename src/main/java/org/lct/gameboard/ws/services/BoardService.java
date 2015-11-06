@@ -45,9 +45,11 @@ public interface BoardService {
      */
     public void logBoardGame(BoardGame boardGame);
 
-    public DroppedWord getVerticalWord(final BoardGame boardGame, final int line, final int column);
+    public DroppedWord getVerticalWord(final BoardGame boardGame, final int row, final int column);
 
-    public DroppedWord getHorizontalWord(final BoardGame boardGame, final int line, final int column, final int pointToAdd);
+    public DroppedWord getHorizontalWord(final BoardGame boardGame, final int row, final int column, final int pointToAdd);
 
     public boolean isValid(DictionaryService dictionaryService, Dictionary dictionary, List<Square> currentSquareList);
+
+    public boolean isAttached(final BoardGame boardGame, final int row, final int column);
 }
