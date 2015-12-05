@@ -136,6 +136,21 @@ public class BoardServiceParalellizeImpl implements BoardService {
         return nbSpaceAfterWord;
     }
 
+    private int getNbPotentionnalFreeSpaceBefore(BoardGame boardGame, int row, int column){
+        int nbSpaceBeforeWord = 0;
+        for(int j = column ; j >= 0 ; j-- ){
+            if( boardGame.getSquares()[row][j].isEmpty()
+                    && (j == 0 || boardGame.getSquares()[row][j-1].isEmpty())
+                    && (row == 0 || boardGame.getSquares()[row - 1][j].isEmpty())
+                    && (row == 14 || boardGame.getSquares()[row + 1][j].isEmpty())){
+                nbSpaceBeforeWord++;
+            }else{
+                break;
+            }
+        }
+        return nbSpaceBeforeWord;
+    }
+
     @Override
     public int wordInternalScore(BoardGame boardGame, DroppedWord droppedWord, DictionaryService dictionaryService, Dictionary dictionary){
         int score = droppedWord.getPoints() * 100000;
@@ -144,17 +159,29 @@ public class BoardServiceParalellizeImpl implements BoardService {
         }
         int line = droppedWord.getRow();
         int column = droppedWord.getColumn();
-        int nbSpaceAfterWord = 0;
+        int nbSpacesAfterWord;
+        int nbSpacesBeforeWord;
         if( droppedWord.isHorizontal() ){
-            nbSpaceAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame, line, column);
+            nbSpacesAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame, line, column);
+            nbSpacesBeforeWord = getNbPotentionnalFreeSpaceBefore(boardGame, line, column);
         }else{
-            nbSpaceAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame.transpose(), line, column);
+            nbSpacesAfterWord = getNbPotentionnalFreeSpaceAfter(boardGame.transpose(), line, column);
+            nbSpacesBeforeWord = getNbPotentionnalFreeSpaceBefore(boardGame.transpose(), line, column);
         }
 
-        if( nbSpaceAfterWord > 0 ) {
+        if( nbSpacesAfterWord > 0 ) {
             Set<String> possibleWords = dictionaryService.findSuffix(droppedWord.getValue(), dictionary);
             for (String word : possibleWords) {
-                if (word.length() <= (droppedWord.getValue().length() + nbSpaceAfterWord)) {
+                if (word.length() <= (droppedWord.getValue().length() + nbSpacesAfterWord)) {
+                    score += 1000;
+                }
+            }
+        }
+
+        if( nbSpacesBeforeWord > 0 ) {
+            Set<String> possibleWords = dictionaryService.findPrefix(droppedWord.getValue(), dictionary);
+            for (String word : possibleWords) {
+                if (word.length() <= (droppedWord.getValue().length() + nbSpacesBeforeWord)) {
                     score += 1000;
                 }
             }
