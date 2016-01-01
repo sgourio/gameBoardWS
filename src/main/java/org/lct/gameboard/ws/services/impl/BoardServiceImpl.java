@@ -550,7 +550,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public boolean isAttached(BoardGame boardGame, int row, int column) {
         return (row == 7 && column == 7)
-                || (!boardGame.getSquares()[row + 1][column].isEmpty() && !boardGame.getSquares()[row + 1][column].isJustDropped())
+                || (!boardGame.getSquares()[row][column].isEmpty() && !boardGame.getSquares()[row][column].isJustDropped())
                 ||(row > 0 && !boardGame.getSquares()[row -1][column].isEmpty())
                 || ( row < 14 && !boardGame.getSquares()[row + 1][column].isEmpty())
                 || (column < 14 && !boardGame.getSquares()[row][column + 1].isEmpty() && isAttached(boardGame, row, column + 1));
